@@ -16,16 +16,16 @@
 
 const NSUInteger kMaxReadLength = 10 * 1024;
 
-@interface Message : NSObject
+@interface RCTMessage : NSObject
 
 @property(nonatomic, assign, readonly) CVImageBufferRef imageBuffer;
-@property(nonatomic, copy, nullable) void (^didComplete)(BOOL succes, Message* message);
+@property(nonatomic, copy, nullable) void (^didComplete)(BOOL succes, RCTMessage* message);
 
 - (NSInteger)appendBytes:(UInt8*)buffer length:(NSUInteger)length;
 
 @end
 
-@interface Message ()
+@interface RCTMessage ()
 
 @property(nonatomic, assign) CVImageBufferRef imageBuffer;
 @property(nonatomic, assign) int imageOrientation;
@@ -33,7 +33,7 @@ const NSUInteger kMaxReadLength = 10 * 1024;
 
 @end
 
-@implementation Message
+@implementation RCTMessage
 
 - (instancetype)init {
   self = [super init];
@@ -129,7 +129,7 @@ const NSUInteger kMaxReadLength = 10 * 1024;
 @interface FlutterSocketConnectionFrameReader () <NSStreamDelegate>
 
 @property(nonatomic, strong) FlutterSocketConnection* connection;
-@property(nonatomic, strong) Message* message;
+@property(nonatomic, strong) RCTMessage* message;
 
 @end
 
@@ -169,11 +169,11 @@ const NSUInteger kMaxReadLength = 10 * 1024;
   }
 
   if (!self.message) {
-    self.message = [[Message alloc] init];
+    self.message = [[RCTMessage alloc] init];
     _readLength = kMaxReadLength;
 
     __weak __typeof__(self) weakSelf = self;
-    self.message.didComplete = ^(BOOL success, Message* message) {
+    self.message.didComplete = ^(BOOL success, RCTMessage* message) {
       if (success) {
         [weakSelf didCaptureVideoFrame:message.imageBuffer
                        withOrientation:message.imageOrientation];
